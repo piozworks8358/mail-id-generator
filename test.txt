@@ -1,0 +1,5 @@
+This is a test file created by ChatGPT via GitHub API.
+Created at: 2026-08-25
+
+ChatGPT is now able to write to this repository!
+This confirms the connection is working.
