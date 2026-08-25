@@ -1,0 +1,40 @@
+name: ChatGPT Webhook Handler
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform (create_file, update_file, create_commit)'
+        required: true
+        default: 'create_file'
+      file_path:
+        description: 'File path'
+        required: true
+      file_content:
+        description: 'File content'
+        required: true
+      commit_message:
+        description: 'Commit message'
+        required: false
+        default: 'Update via ChatGPT'
+
+jobs:
+  chatgpt-action:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Create or update file
+        run: |
+          mkdir -p "$(dirname "${{ github.event.inputs.file_path }}")"
+          echo "${{ github.event.inputs.file_content }}" > "${{ github.event.inputs.file_path }}"
+      
+      - name: Commit and push
+        run: |
+          git config --local user.email "chatgpt@github.com"
+          git config --local user.name "ChatGPT"
+          git add "${{ github.event.inputs.file_path }}"
+          git commit -m "${{ github.event.inputs.commit_message }}"
+          git push
